@@ -1,0 +1,6 @@
+Revision history for Perl extension Perl::AtEndOfScope.
+
+0.01  Tue May 31 13:28:39 2005
+	- original version; created by h2xs 1.23 with options
+		-n Perl::AtEndOfScope -X -b 5.8.0 -A -f
+
