@@ -2,9 +2,10 @@ package Perl::AtEndOfScope;
 
 use 5.008;
 use strict;
-use warnings;
+#use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+our $EXC;
 
 sub new {
   my $class=shift;
@@ -13,8 +14,13 @@ sub new {
 }
 
 sub DESTROY {
-  my ($fn, @args)=@{shift()};
-  &{$fn}(@args);
+  my ($fn, @args)=@{$_[0]};
+  undef $EXC;
+  {
+    local ($@, $a, $b, $_);
+    eval {$fn->(@args)};
+    $EXC=$@;
+  }
 }
 
 1;
@@ -36,6 +42,16 @@ Perl::AtEndOfScope - run some code when a variable goes out of scope
   }
   # now we are back to the old cwd
 
+  # or better using the undocumented "chdir FILEHANDLE"
+  use Perl::AtEndOfScope;
+  {
+    my $restorecwd=Perl::AtEndOfScope->new( sub{chdir $_[0]},
+                                            do {opendir my $d, '.'; $d} );
+    chdir '/path/to/some/directory';
+    ...
+  }
+  # now we are back to the old cwd
+
 =head1 DESCRIPTION
 
 It's often necessary to do some cleanup at the end of a scope. This module
@@ -50,6 +66,22 @@ of scope.
 
 the constructor. The code reference passed in $sub is called with @args
 as parameter list when the object is destroyed.
+
+While $sub is executed the following variables are preserved:
+
+  $@, $a, $b, $_
+
+This list can grow in future versions.
+
+$sub is executed within an eval block. You can check
+
+  $Perl::AtEndOfFile::EXC
+
+to see if an exception has been thrown by it. $Perl::AtEndOfScope::EXC
+is not stringified.
+
+If multiple Perl::AtEndOfScope objects are destroyed at the same time
+only the last exception thrown by one of them is saved.
 
 =item B<DESTROY( $self )>
 
@@ -67,7 +99,7 @@ Torsten Foertsch, E<lt>torsten.foertsch@gmx.netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005 by Torsten Foertsch
+Copyright (C) 2005-2008 by Torsten Foertsch
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

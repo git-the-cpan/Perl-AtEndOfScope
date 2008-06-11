@@ -13,3 +13,13 @@ WriteMakefile(
 			  PREOP => './mk_README.sh',
 			 },
 );
+
+sub MY::postamble {
+  return <<'EOF';
+README: lib/Perl/AtEndOfScope.pm mk_README.sh
+	./mk_README.sh
+
+rpm: dist
+	rpmbuild -ba perl-Perl-AtEndOfScope.spec
+EOF
+}
