@@ -6,7 +6,7 @@ Obsoletes:    p_Perl_AtEndOfScope
 Requires:     perl = %{perl_version}
 Autoreqprov:  on
 Summary:      Perl::AtEndOfScope
-Version:      0.01
+Version:      0.02
 Release:      1
 Source:       Perl-AtEndOfScope-%{version}.tar.gz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build

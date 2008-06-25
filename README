@@ -21,6 +21,12 @@ SYNOPSIS
       }
       # now we are back to the old cwd
 
+INSTALLATION
+     perl Makefile.PL
+     make
+     make test
+     make install
+
 DESCRIPTION
     It's often necessary to do some cleanup at the end of a scope. This
     module creates a Perl object and executes arbitrary code when the object
@@ -33,7 +39,7 @@ METHODS
 
         While $sub is executed the following variables are preserved:
 
-          $@, $a, $b, $_
+          $@, $a, $b, $_, $., $!, $^E, $?
 
         This list can grow in future versions.
 
@@ -61,13 +67,4 @@ COPYRIGHT AND LICENSE
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
-
-INSTALLATION
-     perl Makefile.PL
-     make
-     make test
-     make install
-
-DEPENDENCIES
-    perl 5.8.0
 

@@ -1,11 +1,6 @@
 #!/bin/bash
 
-(perldoc -tU ./lib/Perl/AtEndOfScope.pm
- perldoc -tU $0
-) >README
-
-exit 0
-
+perl -pe '/^=head1 DESCRIPTION/ and print <STDIN>' lib/Perl/AtEndOfScope.pm >README.pod <<EOF
 =head1 INSTALLATION
 
  perl Makefile.PL
@@ -13,8 +8,7 @@ exit 0
  make test
  make install
 
-=head1 DEPENDENCIES
+EOF
 
-perl 5.8.0
-
-=cut
+perldoc -tU README.pod >README
+rm README.pod

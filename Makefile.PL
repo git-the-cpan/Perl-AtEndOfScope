@@ -16,10 +16,13 @@ WriteMakefile(
 
 sub MY::postamble {
   return <<'EOF';
+COMPRESS = gzip -9f
+
 README: lib/Perl/AtEndOfScope.pm mk_README.sh
 	./mk_README.sh
 
 rpm: dist
+	$(PERL) -i -pe 's/^(Version:\s*).*/$${1}$(VERSION)/' perl-Perl-AtEndOfScope.spec
 	rpmbuild -ba perl-Perl-AtEndOfScope.spec
 EOF
 }

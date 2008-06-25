@@ -2,9 +2,9 @@ package Perl::AtEndOfScope;
 
 use 5.008;
 use strict;
-#use warnings;
+use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our $EXC;
 
 sub new {
@@ -17,7 +17,7 @@ sub DESTROY {
   my ($fn, @args)=@{$_[0]};
   undef $EXC;
   {
-    local ($@, $a, $b, $_);
+    local ($@, $a, $b, $_, $., $!, $^E, $?);
     eval {$fn->(@args)};
     $EXC=$@;
   }
@@ -69,7 +69,7 @@ as parameter list when the object is destroyed.
 
 While $sub is executed the following variables are preserved:
 
-  $@, $a, $b, $_
+  $@, $a, $b, $_, $., $!, $^E, $?
 
 This list can grow in future versions.
 
